@@ -1,0 +1,2 @@
+"""MingJian Web backend package."""
+

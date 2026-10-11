@@ -1,0 +1,10 @@
+services:
+  api:
+    environment:
+      MINGJIAN_MESO4_WEIGHTS: /models/meso4_best.pth
+      MINGJIAN_VISUAL_DEVICE: cpu
+    volumes:
+      - type: bind
+        source: ${MINGJIAN_MESO4_HOST_PATH:?Set MINGJIAN_MESO4_HOST_PATH to an authorised meso4_best.pth path}
+        target: /models/meso4_best.pth
+        read_only: true

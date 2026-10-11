@@ -1,0 +1,17 @@
+models/cache/ast-asvspoof2019/config.json  791
+models/cache/ast-asvspoof2019/model.safetensors  344790040
+models/cache/ast-asvspoof2019/preprocessor_config.json  297
+models/cache/deepfakebench/meso4_best.pth  117943
+models/cache/whisper-base/added_tokens.json  34604
+models/cache/whisper-base/config.json  1983
+models/cache/whisper-base/generation_config.json  3807
+models/cache/whisper-base/merges.txt  493869
+models/cache/whisper-base/mingjian-artifacts.json  2162
+models/cache/whisper-base/model.safetensors  290403936
+models/cache/whisper-base/normalizer.json  52666
+models/cache/whisper-base/preprocessor_config.json  184990
+models/cache/whisper-base/special_tokens_map.json  2194
+models/cache/whisper-base/tokenizer.json  2480466
+models/cache/whisper-base/tokenizer_config.json  282683
+models/cache/whisper-base/vocab.json  835550
+

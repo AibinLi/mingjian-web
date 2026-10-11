@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>明鉴 Web｜可追溯分析报告</title>
+    <style>
+      :root { color: #172033; background: #f5f7fb; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+      * { box-sizing: border-box; } body { margin: 0; line-height: 1.55; } main { max-width: 1060px; margin: auto; padding: 30px 20px 56px; }
+      h1, h2, h3, h4 { line-height: 1.25; } h1 { margin: 0 0 4px; } h2 { margin-top: 0; } h3 { margin-bottom: 8px; } h4 { margin: 14px 0 6px; }
+      .notice, form, article, .report-card { background: #fff; border: 1px solid #dce4f0; border-radius: 12px; padding: 20px; margin-top: 18px; }
+      .notice { border-left: 4px solid #a96800; background: #fff9eb; } .notice strong { color: #6e4600; }
+      label { display: block; font-weight: 700; margin: 12px 0 6px; } input { width: 100%; padding: 10px; border: 1px solid #aeb9cb; border-radius: 7px; font: inherit; }
+      button, .link-button { margin: 10px 8px 0 0; padding: 9px 13px; border: 0; border-radius: 7px; background: #145bb8; color: white; cursor: pointer; font: inherit; }
+      button:hover, .link-button:hover { background: #0e478f; } button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid #f2ad31; outline-offset: 2px; }
+      button.secondary { background: #526174; } button.danger { background: #a12637; } button.subtle { color: #145bb8; background: #eef5ff; border: 1px solid #bdd5f5; } button:disabled { opacity: .55; cursor: wait; }
+      #message { min-height: 1.5em; color: #17673b; margin-top: 10px; } #message.error { color: #a12637; }
+      .job { display: grid; grid-template-columns: 1fr auto; gap: 14px; padding: 17px 0; border-top: 1px solid #e5e9f1; } .job:first-child { border-top: 0; }
+      .meta, .muted { color: #526176; font-size: .92rem; overflow-wrap: anywhere; } .status { font-weight: 750; } .queued, .running { color: #8a5a00; } .completed { color: #17673b; } .failed, .cancelled { color: #a12637; }
+      dialog { width: min(1180px, calc(100% - 24px)); max-height: calc(100% - 24px); overflow: auto; border: 0; border-radius: 14px; box-shadow: 0 18px 60px #15223a55; padding: 20px; } dialog::backdrop { background: #17203388; }
+      .dialog-head { display: flex; justify-content: space-between; align-items: start; gap: 14px; margin-bottom: 12px; } .dialog-head h2 { margin: 0; }
+      .report-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; } .report-grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .report-card { margin: 0; } .report-card.highlight { border-color: #bd7811; background: #fffaf0; } .report-card.danger-card { border-color: #d2969e; background: #fff7f8; }
+      .pill { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: .82rem; font-weight: 700; background: #e7edf5; color: #314158; } .pill.available, .pill.completed { background: #def5e7; color: #17673b; } .pill.unavailable, .pill.failed, .pill.cancelled { background: #fde4e7; color: #a12637; } .pill.degraded, .pill.running, .pill.queued { background: #fff0ca; color: #805100; }
+      .evidence-list, .compact-list { margin: 8px 0; padding-left: 20px; } .evidence-list li { margin: 6px 0; } .timeline { display: grid; grid-template-columns: 78px 1fr; gap: 8px 10px; align-items: center; margin: 12px 0; } .timeline button { margin: 0; text-align: left; color: #172033; background: #eaf2fc; border: 1px solid #b7d2f3; }
+      .media { width: 100%; max-height: 480px; background: #0c1422; border-radius: 8px; } .keyframes { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; } .frame { border: 1px solid #dce4f0; border-radius: 9px; padding: 8px; } .frame img { width: 100%; border-radius: 5px; display: block; aspect-ratio: 16/9; object-fit: cover; background: #e9edf4; }
+      .frame button { width: 100%; margin: 7px 0 0; } .score { font-variant-numeric: tabular-nums; } details { border-top: 1px solid #e6ebf2; padding-top: 9px; margin-top: 10px; } summary { cursor: pointer; font-weight: 700; } pre { padding: 12px; border-radius: 8px; overflow: auto; background: #111c2d; color: #eef4ff; font-size: .82rem; white-space: pre-wrap; overflow-wrap: anywhere; }
+      .score-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 12px 0; } .score-box { border: 1px solid #dce4f0; border-radius: 9px; padding: 12px; background: #f8faff; } .score-value { display: block; font-size: 1.55rem; font-weight: 800; margin: 4px 0; } .routing-label { font-size: 1.15rem; font-weight: 800; color: #7b4100; }
+      .claim { border: 1px solid #dce4f0; border-left: 4px solid #6382a7; border-radius: 8px; padding: 12px; margin: 10px 0; } .claim.conflicting { border-left-color: #a12637; } .claim.supported { border-left-color: #17673b; } .claim.refuted { border-left-color: #a12637; } .claim.no_evidence, .claim.background { border-left-color: #a96800; }
+      .citation { padding: 9px; background: #f6f8fb; border-radius: 7px; margin: 8px 0; } .citation p { margin: 5px 0; } code { overflow-wrap: anywhere; } .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+      @media (max-width: 760px) { main { padding: 20px 12px 40px; } .job, .report-grid, .report-grid.two, .score-grid { grid-template-columns: 1fr; } .job > div:last-child { display: flex; flex-wrap: wrap; } dialog { padding: 14px; } .dialog-head { flex-direction: column-reverse; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>明鉴 Web</h1>
+      <p class="muted">面向普通用户的说明与面向专家的可追溯证据，始终分开呈现三条分析轴。</p>
+      <div class="notice"><strong>阶段 9：安全启动与输入边界。</strong>媒体真实性、内容可信度与来源可靠性互不合并为“真/假”。上传受魔数、大小、解码与超时限制；URL 仅作为受限公开 HTTP(S) 引用，默认不抓取。缺失、不可用或 Mock 不会被解释为低风险。</div>
+      <form id="create-form">
+        <h2>创建分析任务</h2>
+        <label for="file">上传文件（JPG、PNG、WebP、MP3、WAV、M4A、MP4、MOV、WebM；最大 10 MiB）</label>
+        <input id="file" type="file" accept=".jpg,.jpeg,.png,.webp,.mp3,.wav,.m4a,.mp4,.mov,.webm" />
+        <label for="source-url">原始公开链接（可选；仅登记到报告用于来源核验，不会下载视频）</label>
+        <input id="source-url" type="url" placeholder="https://www.example.com/original-post" />
+        <label for="url">或输入公开 HTTP(S) URL</label>
+        <input id="url" type="url" placeholder="https://example.org/media.jpg" />
+        <button id="submit" type="submit">创建任务</button>
+        <div id="message" role="status"></div>
+      </form>
+      <article>
+        <h2>任务</h2>
+        <div id="jobs" aria-live="polite">正在读取任务…</div>
+      </article>
+    </main>
+    <dialog id="report-dialog" aria-labelledby="report-title">
+      <div class="dialog-head"><div><h2 id="report-title">分析报告</h2><p id="report-subtitle" class="muted"></p></div><button class="secondary" id="close-report">关闭报告</button></div>
+      <div id="report"></div>
+    </dialog>
+    <script>
+      const api = `${window.location.origin}/api/v1`;
+      const jobsElement = document.getElementById("jobs"), form = document.getElementById("create-form"), fileInput = document.getElementById("file"), sourceUrlInput = document.getElementById("source-url"), urlInput = document.getElementById("url"), message = document.getElementById("message"), submit = document.getElementById("submit"), dialog = document.getElementById("report-dialog"), reportElement = document.getElementById("report"), subtitle = document.getElementById("report-subtitle");
+      const activeStates = new Set(["queued", "running"]); let lastTrigger = null;
+      const text = value => document.createTextNode(value == null ? "—" : String(value));
+      const el = (tag, className, value) => { const node = document.createElement(tag); if (className) node.className = className; if (value !== undefined) node.append(text(value)); return node; };
+      const button = (label, handler, className = "") => { const node = el("button", className, label); node.type = "button"; node.addEventListener("click", handler); return node; };
+      const pretty = value => JSON.stringify(value, null, 2);
+      const timeLabel = value => typeof value === "number" && Number.isFinite(value) ? `${value.toFixed(2)} 秒` : "时间未提供";
+      const statePill = value => el("span", `pill ${String(value || "unknown")}`, value || "unknown");
+      function setMessage(value, error = false) { message.textContent = value; message.className = error ? "error" : ""; }
+      async function request(path, options = {}) { const response = await fetch(`${api}${path}`, options); if (!response.ok) throw new Error((await response.text()) || `HTTP ${response.status}`); return response.status === 204 ? null : response.json(); }
+      function sourceLabel(job) { return job.source.type === "file" ? `文件 SHA-256：${job.source.sha256}${job.source.declared_source_url ? `；原始链接：${job.source.declared_source_url}` : "；未提供原始链接"}` : `URL 引用：${job.source.url}（系统不会抓取）`; }
+      function jobNode(job) {
+        const row = el("div", "job"), information = el("div"), state = el("div", `status ${job.status}`, job.status), meta = el("div", "meta", sourceLabel(job)); information.append(state, meta);
+        if (job.error) information.append(el("div", "meta failed", `失败原因（${job.error.code}）：${job.error.message}`));
+        const controls = el("div");
+        if (job.status === "completed") controls.append(button("查看完整报告", event => openReport(job, event.currentTarget)));
+        if (job.status !== "completed" && job.results) controls.append(button("查看处理详情", event => openFailure(job, event.currentTarget), "secondary"));
+        if (job.status === "completed") controls.append(button("下载 JSON", () => downloadReport(job), "subtle"));
+        if (activeStates.has(job.status)) controls.append(button("取消", () => action(job.id, "cancel"), "danger"));
+        if (["failed", "cancelled"].includes(job.status)) controls.append(button("重新尝试", () => action(job.id, "retry")));
+        if (!activeStates.has(job.status)) controls.append(button("删除", () => action(job.id, "delete"), "secondary"));
+        row.append(information, controls); return row;
+      }
+      async function refresh() { try { const payload = await request("/jobs"); jobsElement.replaceChildren(); if (!payload.items.length) jobsElement.textContent = "暂无任务。"; payload.items.forEach(job => jobsElement.append(jobNode(job))); if (payload.items.some(job => activeStates.has(job.status))) setTimeout(refresh, 600); } catch (error) { jobsElement.textContent = `无法读取任务：${error.message}`; } }
+      async function action(id, actionName) { try { await request(`/jobs/${id}${actionName === "delete" ? "" : `/${actionName}`}`, { method: actionName === "delete" ? "DELETE" : "POST" }); await refresh(); } catch (error) { setMessage(`操作失败：${error.message}`, true); } }
+      function section(title, body, className = "report-card") { const node = el("section", className), heading = el("h3", "", title); node.append(heading); if (body) node.append(body); return node; }
+      function addLine(parent, label, value) { const line = el("p"); line.append(el("strong", "", `${label}：`), text(value)); parent.append(line); }
+      function jumpButton(label, seconds, player) { return button(label, () => { if (!player || typeof seconds !== "number") return; if ("currentTime" in player) { player.currentTime = seconds; player.play?.().catch(() => {}); } else player.scrollIntoView({ block: "center" }); player.focus?.(); }, "subtle"); }
+      function modelSummary(model, configuration) { const body = el("div"); addLine(body, "模型", [model?.name, model?.version].filter(Boolean).join("；") || "未提供"); addLine(body, "许可证", model?.license || "未提供"); addLine(body, "权重 SHA-256", model?.weight_sha256 || model?.expected_weight_sha256 || "未提供"); if (configuration) { const details = el("details"); details.append(el("summary", "", "运行配置（原始记录）"), el("pre", "", pretty(configuration))); body.append(details); } return body; }
+      function axisCard(axis) { const body = el("div"); body.append(statePill(axis.status || (axis.mock ? "mock" : "unknown"))); addLine(body, "结论", axis.conclusion || "无法判断"); addLine(body, "说明", axis.summary || "未提供"); if (axis.risk_score != null) addLine(body, "复核风险指数", `${axis.risk_score} / 100（不是概率）`); if (axis.mock) addLine(body, "数据状态", "Mock 占位或受控夹具；不能视为真实外部证据。"); const evidence = Array.isArray(axis.evidence) ? axis.evidence : []; if (evidence.length) { const list = el("ul", "compact-list"); evidence.slice(0, 5).forEach(item => { const row = el("li"); if (item?.url) { const link = document.createElement("a"); link.href = item.url; link.target = "_blank"; link.rel = "noopener noreferrer"; link.textContent = item.title || item.url; row.append(link, text(` · ${item.match || item.relation || "证据"}`)); } else row.append(text(pretty(item))); list.append(row); }); body.append(el("h4", "", "来源证据"), list); } const limits = Array.isArray(axis.limitations) ? axis.limitations : [axis.limitations].filter(Boolean); if (limits.length) { const list = el("ul", "compact-list"); limits.forEach(item => list.append(el("li", "", item))); body.append(el("h4", "", "限制"), list); } return section(axis.name || "未命名轴", body, "report-card"); }
+      function renderPlayer(job, report) {
+        const features = report.preprocess?.input_features || {};
+        if (!features.has_video && !features.has_audio) return {
+          card: section("媒体回看", el("p", "muted", "没有可播放的标准化媒体：可能是URL引用、预处理失败或派生物已清理。")),
+          player: null,
+        };
+        const body = el("div"), mediaUrl = `${api}/jobs/${encodeURIComponent(job.id)}/media`; let player;
+        const imageInput = [".jpg", ".jpeg", ".png", ".webp"].includes(features.extension);
+        if (imageInput) { player = document.createElement("img"); player.src = mediaUrl; player.alt = "标准化输入图像"; player.className = "media"; player.tabIndex = -1; }
+        else if (features.has_video) { player = document.createElement("video"); player.controls = true; player.preload = "metadata"; player.src = mediaUrl; player.className = "media"; player.append("浏览器无法播放该标准化视频。"); }
+        else { player = document.createElement("audio"); player.controls = true; player.preload = "metadata"; player.src = mediaUrl; player.style.width = "100%"; }
+        player.addEventListener("error", () => { const warning = el("p", "meta failed", "标准化媒体不可播放或已不存在；这不会改变既有分析结论。"); body.append(warning); }, { once: true }); body.append(player);
+        addLine(body, "时间定位", "点击下方任一证据、关键帧、音频区间或主张的“跳转”按钮，会定位到报告保存的时间。时间为 estimated 时会明确标出。");
+        return { card: section("媒体回看与可疑时间轴", body), player };
+      }
+      function evidenceTimeline(title, entries, player) {
+        const body = el("div"); if (!entries?.length) { body.append(el("p", "muted", "模型未提供可定位异常区间。")); return section(title, body); }
+        const timeline = el("div", "timeline"); entries.forEach((entry, index) => { const start = entry.start_seconds ?? entry.timestamp_seconds; const end = entry.end_seconds; timeline.append(el("div", "meta", end != null ? `${timeLabel(start)}–${timeLabel(end)}` : timeLabel(start))); const label = entry.peak_risk_score ?? entry.risk_score; const jump = jumpButton(`${index + 1}. ${label == null ? "查看证据" : `分数 ${label}`} · 跳转`, start, player); timeline.append(jump); }); body.append(timeline); return section(title, body); }
+      function visualSection(job, visual, player) {
+        const body = el("div"); body.append(statePill(visual.status)); addLine(body, "输入质量", visual.input_quality?.status || "未提供"); if (visual.video_risk) addLine(body, "视频风险信号", `${visual.video_risk.risk_score}；${visual.video_risk.score_semantics || "语义未提供"}`); else addLine(body, "视频风险信号", "没有可用分数；不可用或缺失不是低风险。");
+        body.append(modelSummary(visual.model, visual.configuration)); const limits = el("ul", "compact-list"); (visual.limitations || []).forEach(item => limits.append(el("li", "", item))); if (limits.childNodes.length) body.append(el("h4", "", "限制"), limits);
+        const high = visual.evidence?.highest_risk_frame; if (high?.timestamp_seconds != null) body.append(jumpButton(`最高风险帧：${timeLabel(high.timestamp_seconds)} · 跳转`, high.timestamp_seconds, player));
+        const frameItems = visual.frame_risks || []; if (frameItems.length) { const frames = el("div", "keyframes"); frameItems.slice(0, 12).forEach(frame => { const card = el("div", "frame"), image = document.createElement("img"); image.loading = "lazy"; image.alt = `关键帧 ${frame.frame_index}，${timeLabel(frame.timestamp_seconds)}`; image.src = `${api}/jobs/${encodeURIComponent(job.id)}/frames/${encodeURIComponent(frame.frame_index)}`; image.addEventListener("error", () => { image.alt = "关键帧派生物不可用"; }); card.append(image, el("p", "meta score", `帧 ${frame.frame_index} · ${timeLabel(frame.timestamp_seconds)} · 分数 ${frame.risk_score}`), jumpButton("跳转到此帧", frame.timestamp_seconds, player)); frames.append(card); }); body.append(el("h4", "", "视觉关键帧（最多显示 12 个已保存帧）"), frames); }
+        else body.append(el("p", "muted", "模型没有提供可展示的视觉关键帧。"));
+        body.append(el("p", "muted", "当前 Meso4 报告 schema 不含热力图；未提供热力图时不会用前端生成或推断。"));
+        return section("视觉分析", body);
+      }
+      function audioSection(audio, sync, player) {
+        const body = el("div"); body.append(statePill(audio.status)); addLine(body, "整段音频信号", audio.whole_audio_risk ? `${audio.whole_audio_risk.risk_score}；${audio.whole_audio_risk.score_semantics || "未经校准"}` : "没有可用整段音频分数；不适用或不可用不是低风险。"); addLine(body, "输入质量", audio.input_quality?.status || "未提供"); body.append(modelSummary(audio.model, audio.configuration));
+        const segments = audio.evidence?.suspicious_segments || []; if (segments.length) body.append(evidenceTimeline("音频异常区间", segments, player)); else body.append(el("p", "muted", "没有模型提供的音频异常区间。"));
+        if (sync) { body.append(el("h4", "", "音画同步筛查（独立、未经校准）"), statePill(sync.status)); addLine(body, "同步筛查信号", sync.risk_score == null ? "没有可用同步分数；不适用或不可用不是低风险。" : `${sync.risk_score}；${sync.score_semantics || "未经校准的筛查信号"}`); (sync.anomalous_intervals || []).forEach(interval => body.append(jumpButton(`同步异常区间：${timeLabel(interval.start_seconds)} · 跳转`, interval.start_seconds, player))); const syncLimits = el("ul", "compact-list"); (sync.limitations || []).forEach(item => syncLimits.append(el("li", "", item))); if (syncLimits.childNodes.length) body.append(syncLimits); }
+        return section("音频与音画同步", body);
+      }
+      async function readArtifact(jobId, name) { try { return await request(`/jobs/${encodeURIComponent(jobId)}/artifacts/${encodeURIComponent(name)}`); } catch { return null; } }
+      function renderTranscript(asr, ocr, player) {
+        const body = el("div"), asrItems = asr?.segments || [], ocrItems = ocr?.items || []; addLine(body, "ASR 状态", asr?.status || "工件不可用"); addLine(body, "OCR 状态", ocr?.status || "工件不可用"); addLine(body, "可定位记录", `ASR ${asrItems.length} 段；OCR ${ocrItems.length} 项。记录数只用于说明工件差异，不构成内容结论。`);
+        const records = el("ul", "evidence-list"); asrItems.slice(0, 10).forEach(item => { const row = el("li"); row.append(el("strong", "", `ASR ${timeLabel(item.start_seconds)}–${timeLabel(item.end_seconds)}：`), text(item.text || "（空文本）"), jumpButton("跳转", item.start_seconds, player)); records.append(row); }); ocrItems.slice(0, 10).forEach(item => { const row = el("li"); row.append(el("strong", "", `OCR ${timeLabel(item.timestamp_seconds)}：`), text(item.text || "（空文本）"), jumpButton("跳转", item.timestamp_seconds, player)); records.append(row); }); if (!records.childNodes.length) records.append(el("li", "muted", "没有可展示的 ASR/OCR 可定位文本。默认适配器可能不可用或为 Mock。")); body.append(records); return section("ASR / OCR 差异与时间追溯", body);
+      }
+      function renderClaims(claims, player) {
+        const body = el("div"); if (!claims?.length) { body.append(el("p", "muted", "没有可追溯主张。没有主张或暂无证据不表示内容真实、虚假或低风险。")); return section("内容主张与引用", body); }
+        claims.forEach(claim => { const card = el("article", `claim ${claim.status || ""}`); card.append(statePill(claim.status_label || claim.status), el("p", "", claim.original_text || "（原文缺失）")); const trace = claim.source_trace || {}; addLine(card, "来源", `${trace.modality || "未知"}；${trace.start_seconds != null ? `${timeLabel(trace.start_seconds)}–${timeLabel(trace.end_seconds)}` : timeLabel(trace.timestamp_seconds)}；${trace.timestamp_quality || "时间质量未提供"}`); const jumpAt = trace.start_seconds ?? trace.timestamp_seconds; if (jumpAt != null) card.append(jumpButton("跳转到原始位置", jumpAt, player)); if (claim.queries?.length) addLine(card, "已保存查询", claim.queries.map(item => item.text).join("；")); const citations = claim.citations || []; if (citations.length) { card.append(el("h4", "", "已保存引用")); citations.forEach(citation => { const cite = el("div", "citation"), link = document.createElement("a"); link.href = citation.url; link.target = "_blank"; link.rel = "noopener noreferrer"; link.textContent = citation.title || citation.url; cite.append(link); addLine(cite, "关系", `${citation.relation}；${citation.mock ? "Mock 受控引用，不是真实外部证据" : citation.source_kind || "来源类型未提供"}`); addLine(cite, "域名与时间", `${citation.domain || "未提供"}；发布 ${citation.published_at || "未知"}；抓取 ${citation.fetched_at || "未提供"}`); addLine(cite, "逐字片段", citation.excerpt || "未提供"); card.append(cite); }); } else card.append(el("p", "muted", "该主张没有可用引用；暂无证据不等于主张为假。")); body.append(card); }); return section("内容主张与引用", body);
+      }
+      function renderLlmAnalysis(value) {
+        const body = el("div");
+        if (!value) { body.append(el("p", "muted", "本报告未生成 DeepSeek 辅助研判。")); return section("DeepSeek 报告辅助研判", body); }
+        body.append(statePill(value.status));
+        addLine(body, "服务", [value.provider, value.model].filter(Boolean).join(" · ") || "未提供");
+        addLine(body, "输出语言", value.analysis_language || "未提供");
+        addLine(body, "生成时间", value.generated_at || "未提供");
+        if (value.analysis) body.append(el("h4", "", "基于证据包的研判"), el("p", "", value.analysis));
+        else body.append(el("p", "muted", "本次未得到模型分析文本；任务本身仍会保留已完成的本地检测与核验工件。"));
+        const limits = Array.isArray(value.limitations) ? value.limitations : [];
+        if (limits.length) { const list = el("ul", "compact-list"); limits.forEach(item => list.append(el("li", "", item))); body.append(el("h4", "", "边界与限制"), list); }
+        return section("DeepSeek 报告辅助研判（不替代三轴结论）", body, "report-card highlight");
+      }
+      function renderInternetVerification(value) {
+        const body = el("div");
+        if (!value) { body.append(el("p", "muted", "本报告未生成联网搜索属实性核验。")); return section("联网搜索属实性核验", body); }
+        body.append(statePill(value.status));
+        addLine(body, "核验结论", value.verdict || "无法判断");
+        addLine(body, "联网反证风险指数", value.risk_score == null ? "无法评分；没有真实联网引用或结构化核验不可用" : `${value.risk_score} / 100（固定政策映射，不是虚假概率）`);
+        addLine(body, "服务", [value.provider, value.model].filter(Boolean).join(" · ") || "未提供");
+        if (value.summary) addLine(body, "摘要", value.summary);
+        const results = value.claim_results || [];
+        if (results.length) {
+          const list = el("div");
+          results.forEach(item => { const card = el("article", `claim ${item.status || ""}`); card.append(statePill(item.status_label || item.status), el("p", "", item.original_text || "（主张原文缺失）")); if (item.reason) addLine(card, "模型理由", item.reason); addLine(card, "采用的真实引用", `${(item.citations || []).length} 条`); (item.citations || []).forEach(citation => { const link = document.createElement("a"); link.href = citation.url; link.target = "_blank"; link.rel = "noopener noreferrer"; link.textContent = citation.title || citation.url; card.append(link); }); list.append(card); });
+          body.append(el("h4", "", "逐条主张联网核验"), list);
+        } else body.append(el("p", "muted", "没有通过索引和真实引用校验的联网主张结果；这不表示内容属实。"));
+        const limits = Array.isArray(value.limitations) ? value.limitations : []; if (limits.length) { const list = el("ul", "compact-list"); limits.forEach(item => list.append(el("li", "", item))); body.append(el("h4", "", "边界与限制"), list); }
+        return section("联网搜索属实性核验（独立于三轴）", body, "report-card highlight");
+      }
+      function renderAggregateAssessment(value, job) {
+        const body = el("div");
+        if (!value) { body.append(el("p", "muted", "本报告未生成统一公式综合评分报告。")); return section("四维综合评分报告", body); }
+        body.append(statePill(value.status), el("p", "routing-label", value.routing_label || "需人工干预"));
+        addLine(body, "完整四维总体分", value.overall_score == null ? "无法计算；四个维度尚未全部具备有效证据" : `${value.overall_score} / 100`);
+        if (value.partial_score != null && value.overall_score == null) addLine(body, "已覆盖维度局部参考分", `${value.partial_score} / 100（不能作为最终总体分）`);
+        addLine(body, "有效权重覆盖", `${Math.round((value.coverage || 0) * 100)}%（最低要求 ${Math.round((value.minimum_coverage || 0) * 100)}%）`);
+        addLine(body, "分区原因", value.routing_reason || "未提供");
+        const grid = el("div", "score-grid"); Object.values(value.components || {}).forEach(component => { const card = el("div", "score-box"); card.append(el("strong", "", component.name || "未命名维度"), el("span", "score-value score", component.score == null ? "—" : component.score), el("span", "meta", `权重 ${(Number(component.configured_weight || 0) * 100).toFixed(0)}% · 有效证据 ${component.evidence_count || 0}`)); grid.append(card); }); body.append(grid);
+        const details = el("details"); details.append(el("summary", "", "统一公式、分区和原始输入"), el("pre", "", pretty({ component_formula: value.component_formula, overall_formula: value.overall_formula, bands: value.bands, components: value.components, limitations: value.limitations, truth_label: value.truth_label, automatic_action: value.automatic_action }))); body.append(details, button("下载独立综合评分 JSON", () => downloadArtifact(job, "aggregate_assessment", `mingjian-scorecard-${job.id}.json`), "subtle"));
+        return section("四维综合评分报告（用于复核排序，不是自动真假结论）", body, "report-card highlight");
+      }
+      async function refreshLlmAnalysis(job, trigger) {
+        trigger.disabled = true; setMessage("正在重新生成 DeepSeek 研判…");
+        try { await request(`/jobs/${encodeURIComponent(job.id)}/refresh-llm`, { method: "POST" }); await openReport(job, trigger); setMessage("DeepSeek 研判已更新。"); }
+        catch (error) { setMessage(`DeepSeek 研判更新失败：${error.message}`, true); }
+        finally { trigger.disabled = false; }
+      }
+      function renderRecommendation(value) { const body = el("div"); if (!value) { body.append(el("p", "muted", "未提供阶段 6 综合建议。")); return section("综合建议", body); } body.append(statePill(value.status)); addLine(body, "建议", value.suggestion || "未提供"); addLine(body, "理由", value.rationale || "未提供"); addLine(body, "自动动作", value.automatic_action || "none"); addLine(body, "法律/政策判断", value.legal_or_policy_determination || "none"); const details = el("details"); details.append(el("summary", "", "专家复核规则与校准输入"), el("pre", "", pretty({ decision_trace: value.decision_trace, calibration_inputs: value.calibration_inputs, limitations: value.limitations }))); body.append(details); return section("综合建议（仅供人工复核）", body, "report-card highlight"); }
+      function renderQuality(quality) { const body = el("div"); if (!quality?.gates?.length) { body.append(el("p", "muted", "未提供质量门控工件。")); return section("质量与不确定性", body); } const list = el("ul", "evidence-list"); quality.gates.forEach(gate => { const item = el("li"); item.append(statePill(gate.status), text(` ${gate.code}：${gate.reason || "未提供原因"}`)); list.append(item); }); body.append(list); return section("质量与不确定性", body); }
+      function renderAudit(job, report) { const body = el("div"); addLine(body, "任务 ID", job.id); addLine(body, "分析时间", report.generated_at || job.completed_at || "未提供"); addLine(body, "文件 SHA-256", job.source.sha256 || "URL 引用任务没有本地文件哈希"); addLine(body, "原始公开链接", job.source.declared_source_url || job.source.url || "未提供；无法仅凭本地文件恢复传播链"); addLine(body, "对象键", job.source.object_key || "不适用"); addLine(body, "预处理版本", report.preprocess?.version || "未提供"); const details = el("details"); details.append(el("summary", "", "模型版本、配置、原始质量/工件清单"), el("pre", "", pretty({ visual_model: report.visual_model?.model, visual_configuration: report.visual_model?.configuration, audio_model: report.audio_model?.model, audio_configuration: report.audio_model?.configuration, audio_visual_sync: report.audio_visual_sync?.model, llm_analysis: report.llm_analysis, internet_verification: report.internet_verification, aggregate_assessment: report.aggregate_assessment, preprocess: report.preprocess, phase6_calibration: report.phase6?.calibration }))); body.append(details); return section("审计信息", body); }
+      async function openReport(job, trigger) {
+        try { lastTrigger = trigger; const report = await request(`/jobs/${encodeURIComponent(job.id)}/report`); const [asr, ocr, quality] = await Promise.all([readArtifact(job.id, "asr"), readArtifact(job.id, "ocr"), readArtifact(job.id, "phase6_quality")]); reportElement.replaceChildren(); subtitle.textContent = `任务 ${job.id} · 分析时间：${report.generated_at || job.completed_at || "未提供"}`;
+          const header = el("section", "report-card"); header.append(el("p", report.mock ? "meta failed" : "meta", `报告状态：mock=${report.mock}。${report.disclaimer || "未提供总说明"}`), button("重新生成 DeepSeek 研判", event => refreshLlmAnalysis(job, event.currentTarget), "subtle")); reportElement.append(header, renderLlmAnalysis(report.llm_analysis), renderInternetVerification(report.internet_verification), renderAggregateAssessment(report.aggregate_assessment, job));
+          const top = el("div", "report-grid"); Object.values(report.axes || {}).forEach(axis => top.append(axisCard(axis))); reportElement.append(top, renderRecommendation(report.phase6?.recommendation));
+          const media = renderPlayer(job, report); reportElement.append(media.card);
+          if (report.visual_model) { reportElement.append(visualSection(job, report.visual_model, media.player), evidenceTimeline("视觉可疑时间轴", report.visual_model.evidence?.suspicious_segments || [], media.player)); }
+          if (report.audio_model) reportElement.append(audioSection(report.audio_model, report.audio_visual_sync, media.player));
+          reportElement.append(renderTranscript(asr, ocr, media.player), renderClaims(report.claim_verification?.claims || report.axes?.content?.claims, media.player));
+          const lower = el("div", "report-grid two"); lower.append(renderQuality(quality || report.phase6?.quality), renderAudit(job, report)); reportElement.append(lower); dialog.showModal();
+        } catch (error) { setMessage(`无法读取报告：${error.message}`, true); }
+      }
+      function openFailure(job, trigger) { lastTrigger = trigger; reportElement.replaceChildren(); subtitle.textContent = `任务 ${job.id} · 状态：${job.status}`; const body = el("div"); body.append(statePill(job.status)); addLine(body, "失败原因", job.error ? `${job.error.code}：${job.error.message}` : "任务尚未产生完整报告。"); addLine(body, "说明", "失败、取消、缺失工件或不可用模块不会被隐藏，也不表示低风险。"); if (job.results) { const details = el("details"); details.open = true; details.append(el("summary", "", "已保留的预处理/命令诊断"), el("pre", "", pretty(job.results))); body.append(details); } reportElement.append(section("任务处理详情", body, "report-card danger-card")); dialog.showModal(); }
+      async function downloadReport(job) { try { const report = await request(`/jobs/${encodeURIComponent(job.id)}/report`); const blob = new Blob([JSON.stringify(report, null, 2)], { type: "application/json" }); const url = URL.createObjectURL(blob), link = document.createElement("a"); link.href = url; link.download = `mingjian-report-${job.id}.json`; link.click(); URL.revokeObjectURL(url); } catch (error) { setMessage(`无法下载 JSON：${error.message}`, true); } }
+      async function downloadArtifact(job, name, filename) { try { const value = await readArtifact(job.id, name); if (!value) throw new Error("工件不可用"); const blob = new Blob([JSON.stringify(value, null, 2)], { type: "application/json" }); const url = URL.createObjectURL(blob), link = document.createElement("a"); link.href = url; link.download = filename; link.click(); URL.revokeObjectURL(url); } catch (error) { setMessage(`无法下载独立报告：${error.message}`, true); } }
+      form.addEventListener("submit", async event => { event.preventDefault(); const file = fileInput.files[0], url = urlInput.value.trim(), sourceUrl = sourceUrlInput.value.trim(); if ((file && url) || (!file && !url)) { setMessage("请仅选择一个文件或输入一个 URL。", true); return; } if (url && sourceUrl) { setMessage("输入 URL 任务时无需再填写原始公开链接。", true); return; } submit.disabled = true; setMessage("正在创建任务…"); try { if (file) { const body = new FormData(); body.append("file", file); if (sourceUrl) body.append("source_url", sourceUrl); await request("/jobs/upload", { method: "POST", body }); } else await request("/jobs", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ url }) }); form.reset(); setMessage("任务已创建，正在等待本地 Worker 推进。"); await refresh(); } catch (error) { setMessage(`创建失败：${error.message}`, true); } finally { submit.disabled = false; } });
+      document.getElementById("close-report").addEventListener("click", () => dialog.close()); dialog.addEventListener("close", () => lastTrigger?.focus()); refresh();
+    </script>
+  </body>
+</html>

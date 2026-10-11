@@ -1,0 +1,54 @@
+{
+  "schema_version": "phase8-suite-manifest-v1",
+  "random_seed": "mingjian-phase8-frozen-20260715",
+  "description": "Phase 8 reproducibility suite. Visual uses the retained Phase 3 Celeb-DF v2 official-test raw prediction JSONL. Other axes are explicit not_applicable entries because no authorised frozen labelled manifests are available in this repository.",
+  "experiments": [
+    {
+      "name": "visual-celeb-df-v2-meso4-official-518",
+      "axis": "visual",
+      "kind": "prediction_jsonl",
+      "predictions": "D:/mingjian-evaluation-artifacts/phase3-celeb-df-v2-20260714/celeb-df-v2-meso4.predictions.jsonl",
+      "manifest": "D:/mingjian-evaluation-artifacts/phase3-celeb-df-v2-20260714/celeb-df-v2-official-test.manifest.jsonl",
+      "config": "D:/mingjian-evaluation-artifacts/phase3-celeb-df-v2-20260714/celeb-df-v2-meso4.config.json",
+      "expected_predictions_sha256": "4e7e87b508d7e1a27d8ff56afe8f84b5685a703e9aaf60a9a61fdd3a36adb8eb",
+      "expected_manifest_sha256": "20bb4a4a17e95b83f6b95ad162174a5d8f0a5ca5b83d735706ab0ccd1d75ca77",
+      "expected_config_sha256": "1856c1845a9ae71d2267a8d56e257bd8291bac8c6111f3bbd42fcc15c323929a",
+      "expected_model_weight_sha256": "a362ebbef2658daa551d808fbfccd57f0b5fd34fda46a05996e807cccddff4e0",
+      "expected_total_rows": 518,
+      "expected_label_counts": {"0": 178, "1": 340},
+      "expected_status_counts": {"completed": 518},
+      "decision_threshold": 0.5,
+      "score_field": "risk_score"
+    },
+    {
+      "name": "audio-spoofing",
+      "axis": "audio",
+      "kind": "not_applicable",
+      "reason": "No authorised frozen labelled audio-spoofing manifest is available. Celeb-DF v2 official 518 videos have no audio stream, so audio F1/AUC/EER/FPR/FNR/calibration metrics are not claimed."
+    },
+    {
+      "name": "fact-checking",
+      "axis": "fact_check",
+      "kind": "not_applicable",
+      "reason": "No authorised frozen labelled claim/evidence/fact-check manifest with real ASR/OCR/search provenance is available. Existing fixtures are controlled Mock pipeline tests, not factual performance data."
+    },
+    {
+      "name": "three-axis-fusion",
+      "axis": "fusion",
+      "kind": "not_applicable",
+      "reason": "No frozen labelled multi-axis manifest exists. Mock content/provenance axes are forbidden from forming conflict or fusion signals, so fusion metrics are not claimed."
+    },
+    {
+      "name": "ablation",
+      "axis": "ablation",
+      "kind": "not_applicable",
+      "reason": "Ablation requires frozen labelled component manifests for at least two real non-mock axes. Only the visual Celeb-DF v2 official-test prediction file is available."
+    },
+    {
+      "name": "robustness",
+      "axis": "robustness",
+      "kind": "not_applicable",
+      "reason": "No authorised frozen robustness perturbation manifest is available. Difficult or perturbed samples are not generated or removed in Phase 8."
+    }
+  ]
+}
