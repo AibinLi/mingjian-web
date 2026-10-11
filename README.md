@@ -89,12 +89,3 @@ scripts/       启动、校验和模型准备脚本
 - [测试记录](docs/TESTING.md)
 - [第三方组件与许可](docs/THIRD_PARTY_NOTICES.md)
 
-## 公开发布边界
-
-建议只从本目录创建 GitHub 仓库。外层“可执行文件”目录是本地比赛发行包，包含约 1.6 GB 的解释器、工具、wheel 和模型缓存；请通过 GitHub Release、对象存储或授权下载方式单独分发，并先确认第三方许可允许再分发。参赛报告、答辩 PPT、原创性声明和演示视频含有身份或提交上下文，发布前应单独脱敏并确认是否需要公开。
-
-## 许可
-
-当前仓库尚未声明项目整体开源许可证。公开前请补充根目录 `LICENSE`，并在 [docs/THIRD_PARTY_NOTICES.md](docs/THIRD_PARTY_NOTICES.md) 中确认第三方模型、数据和工具的许可边界。
-
-
